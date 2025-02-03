@@ -1,5 +1,7 @@
 For demo: 
 
+use demo_code.py
+
 Installs (if not pre-installed):
 
 pip3 install evdev
