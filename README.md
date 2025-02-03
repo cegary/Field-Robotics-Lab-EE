@@ -1,10 +1,10 @@
-For demo: 
+**For demo: **
 
 use demo_code.py
 
 
 
-Installs (if not pre-installed):
+**Installs (if not pre-installed):**
 
 pip3 install evdev 
 python3.10 -m pip install pylx16a 
@@ -14,19 +14,22 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install bluetooth bluez bluez-tools blueman python3-pip -y
 
 
-Activate bluetooth:
+**Activate bluetooth:**
 sudo systemctl start bluetooth
 sudo systemctl enable bluetooth
 
 
 
-Put PS5 controller in pairing mode:
+**Put PS5 controller in pairing mode:**
+
 Hold PS (PlayStation) + Create (small button next to touchpad) until the light bar starts flashing.
 
 
 
-Scan:
+**Scan:**
+
 Bluetoothctl
+
 scan on
 
 find controller MAC address
@@ -41,11 +44,11 @@ exit
 
 
 
-Verify: 
+**Verify: **
 ls /dev/input/
 
 
 
-run:
+**run:**
 python3 demo_code.py
 
