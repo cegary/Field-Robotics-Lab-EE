@@ -15,7 +15,9 @@ sudo apt install bluetooth bluez bluez-tools blueman python3-pip -y
 
 
 **Activate bluetooth:**
+
 sudo systemctl start bluetooth
+
 sudo systemctl enable bluetooth
 
 
