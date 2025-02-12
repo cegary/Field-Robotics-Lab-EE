@@ -5,7 +5,9 @@ import time
 
 def control_motors(left_speed, right_speed):
     print(f"Left Motors: {left_speed}, Right Motors: {right_speed}") 
-   
+    
+    left_speed = int(left_speed)
+    right_speed = int(right_speed)
     #left side
     servo_28.motor_mode(left_speed)
     servo_22.motor_mode(left_speed)
