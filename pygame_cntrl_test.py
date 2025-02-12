@@ -3,11 +3,11 @@ from math import sin, cos
 from pylx16a.lx16a import *
 import time
 
-def control_motors(left_speed, right_speed):
+def control_motors(l, r):
     #print(f"Left Motors: {left_speed}, Right Motors: {right_speed}") 
     
-    left_speed = int(left_speed)
-    right_speed = int(right_speed)
+    left_speed = int(l)
+    right_speed = -1 * int(r)
     #left side
     servo_28.motor_mode(left_speed)
     servo_22.motor_mode(left_speed)
@@ -17,7 +17,7 @@ def control_motors(left_speed, right_speed):
     servo_21.motor_mode(right_speed)
     servo_20.motor_mode(right_speed)
     servo_23.motor_mode(right_speed)
-    _speed = [left_speed, right_speed]
+    _speed = [l, r]
     return _speed
 
 
@@ -106,15 +106,15 @@ while run:
                 # Axis 0 = y (negative up)
                 # Axis 1 = x (negative left)
                 if event.axis == 0:
-                    speed[0] = max(min(1000, speed[0]+(event.value*100)), 0)
-                    speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
+                    speed[0] = max(min(1000, speed[0]+(event.value*100)), -1000)
+                    speed[1] = max(min(1000, speed[1]+(event.value*100)), -1000)
                 elif event.axis == 1:
                     if event.value > 0:
-                        speed[0] = max(min(1000, speed[0]+(event.value*100)), 0)
-                        speed[1] = max(min(1000, speed[1]-(event.value*100)), 0)
+                        speed[0] = min(1000, speed[0]+(event.value*100))
+                        speed[1] = max(min(1000, speed[1]-(event.value*100)), -1000)
                     else:
-                        speed[0] = max(min(1000, speed[0]-(event.value*100)), 0)
-                        speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
+                        speed[0] = max(min(1000, speed[0]-(event.value*100)), -1000)
+                        speed[1] = min(1000, speed[1]+(event.value*100))
             else:
                 speed = [0,0]
             speed = control_motors(speed[0], speed[1])
