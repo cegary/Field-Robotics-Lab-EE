@@ -93,6 +93,7 @@ while run:
         if event.type == pygame.JOYBUTTONDOWN:
             print(f"Button {event.button} pressed")
             if event.button == 1:
+                control_motors(0,0)
                 run = False
                 break
 
@@ -113,7 +114,7 @@ while run:
                     else:
                         speed[0] = max(min(1000, speed[0]-(event.value*100)), 0)
                         speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
-                else:
-                    speed = [0,0]
-                speed = control_motors(speed[0], speed[1])
+            else:
+                speed = [0,0]
+            speed = control_motors(speed[0], speed[1])
 pygame.quit()
