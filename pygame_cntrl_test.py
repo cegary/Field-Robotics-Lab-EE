@@ -15,6 +15,7 @@ def control_motors(left_speed, right_speed):
     servo_21.motor_mode(right_speed)
     servo_20.motor_mode(right_speed)
     servo_23.motor_mode(right_speed)
+    return left_speed, right_speed
 
 
 # Initialize pygame
@@ -76,23 +77,41 @@ try:
     left_y=0
 
 # Loop to read inputs
-running = True
-while running:
+speedL, speedR = 0
+while True:
+
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        #if event.type == pygame.QUIT:
+        #    break
 
         # Check for button press
         if event.type == pygame.JOYBUTTONDOWN:
             print(f"Button {event.button} pressed")
+            if event.button == 1:
+                break
 
-        # Check for axis movement (e.g., analog stick)
-        if event.type == pygame.JOYAXISMOTION & event.value > 0.5:
+
+        
+        if event.type == pygame.JOYAXISMOTION & event.value > 0.2:
             print(f"Axis {event.axis} moved to {event.value}")
+            # Left Joystick
+            # Axis 0 = y (negative up)
+            # Axis 1 = x (negative left)
             if event.axis == 0:
-                
-                control_motors()
+                speedL = max(min(1000, speedL+(event.value*100)), 0)
+                speedR = max(min(1000, speedR+(event.value*100)), 0)
             elif event.axis == 1:
+                if event.value > 0:
+                    speedL = max(min(1000, speedL+(event.value*100)), 0)
+                    speedR = max(min(1000, speedR-(event.value*100)), 0)
+                else:
+                    speedL = max(min(1000, speedL-(event.value*100)), 0)
+                    speedR = max(min(1000, speedR+(event.value*100)), 0)
+
+            else:
+                speedL, speedR = 0
+            speedL, speedR = control_motors(speedL, speedR)
+    break
 
 
 pygame.quit()
