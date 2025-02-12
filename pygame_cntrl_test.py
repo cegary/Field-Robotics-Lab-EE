@@ -15,7 +15,8 @@ def control_motors(left_speed, right_speed):
     servo_21.motor_mode(right_speed)
     servo_20.motor_mode(right_speed)
     servo_23.motor_mode(right_speed)
-    return left_speed, right_speed
+    _speed = [left_speed, right_speed]
+    return _speed
 
 
 # Initialize pygame
@@ -30,7 +31,7 @@ else:
     joystick.init()
     print(f"Controller connected: {joystick.get_name()}")
 
-try:
+
     #Motors
     servo_20 = LX16A(20)
     servo_20.enable_torque()
@@ -77,7 +78,7 @@ try:
     left_y=0
 
 # Loop to read inputs
-speedL, speedR = 0
+speed = [0,0]
 while True:
 
     for event in pygame.event.get():
@@ -90,7 +91,6 @@ while True:
             if event.button == 1:
                 break
 
-
         
         if event.type == pygame.JOYAXISMOTION & event.value > 0.2:
             print(f"Axis {event.axis} moved to {event.value}")
@@ -98,19 +98,18 @@ while True:
             # Axis 0 = y (negative up)
             # Axis 1 = x (negative left)
             if event.axis == 0:
-                speedL = max(min(1000, speedL+(event.value*100)), 0)
-                speedR = max(min(1000, speedR+(event.value*100)), 0)
+                speed[0] = max(min(1000, speed[0]+(event.value*100)), 0)
+                speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
             elif event.axis == 1:
                 if event.value > 0:
-                    speedL = max(min(1000, speedL+(event.value*100)), 0)
-                    speedR = max(min(1000, speedR-(event.value*100)), 0)
+                    speed[0] = max(min(1000, speed[0]+(event.value*100)), 0)
+                    speed[1] = max(min(1000, speed[1]-(event.value*100)), 0)
                 else:
-                    speedL = max(min(1000, speedL-(event.value*100)), 0)
-                    speedR = max(min(1000, speedR+(event.value*100)), 0)
-
+                    speed[0] = max(min(1000, speed[0]-(event.value*100)), 0)
+                    speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
             else:
-                speedL, speedR = 0
-            speedL, speedR = control_motors(speedL, speedR)
+                speed = [0,0]
+            speed = control_motors(speed[0], speed[1])
     break
 
 
