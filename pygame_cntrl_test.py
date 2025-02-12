@@ -4,7 +4,7 @@ from pylx16a.lx16a import *
 import time
 
 def control_motors(left_speed, right_speed):
-    print(f"Left Motors: {left_speed}, Right Motors: {right_speed}") 
+    #print(f"Left Motors: {left_speed}, Right Motors: {right_speed}") 
     
     left_speed = int(left_speed)
     right_speed = int(right_speed)
@@ -99,7 +99,8 @@ while run:
 
         
         if (event.type == pygame.JOYAXISMOTION):
-            if event.value > 0.2:
+            print(f"Axis {event.axis} moved to {event.value}")
+            if abs(event.value) > 0.2:
                 print(f"Axis {event.axis} moved to {event.value}")
                 # Left Joystick
                 # Axis 0 = y (negative up)
