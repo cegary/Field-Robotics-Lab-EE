@@ -19,6 +19,7 @@ def control_motors(left_speed, right_speed):
     return _speed
 
 
+LX16A.initialize("COM12")
 # Initialize pygame
 pygame.init()
 pygame.joystick.init()
@@ -78,8 +79,9 @@ else:
     left_y=0
 
 # Loop to read inputs
+run = True
 speed = [0,0]
-while True:
+while run:
 
     for event in pygame.event.get():
         #if event.type == pygame.QUIT:
@@ -89,28 +91,27 @@ while True:
         if event.type == pygame.JOYBUTTONDOWN:
             print(f"Button {event.button} pressed")
             if event.button == 1:
+                run = False
                 break
 
         
-        if event.type == pygame.JOYAXISMOTION & event.value > 0.2:
-            print(f"Axis {event.axis} moved to {event.value}")
-            # Left Joystick
-            # Axis 0 = y (negative up)
-            # Axis 1 = x (negative left)
-            if event.axis == 0:
-                speed[0] = max(min(1000, speed[0]+(event.value*100)), 0)
-                speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
-            elif event.axis == 1:
-                if event.value > 0:
+        if (event.type == pygame.JOYAXISMOTION):
+            if event.value > 0.2:
+                print(f"Axis {event.axis} moved to {event.value}")
+                # Left Joystick
+                # Axis 0 = y (negative up)
+                # Axis 1 = x (negative left)
+                if event.axis == 0:
                     speed[0] = max(min(1000, speed[0]+(event.value*100)), 0)
-                    speed[1] = max(min(1000, speed[1]-(event.value*100)), 0)
-                else:
-                    speed[0] = max(min(1000, speed[0]-(event.value*100)), 0)
                     speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
-            else:
-                speed = [0,0]
-            speed = control_motors(speed[0], speed[1])
-    break
-
-
+                elif event.axis == 1:
+                    if event.value > 0:
+                        speed[0] = max(min(1000, speed[0]+(event.value*100)), 0)
+                        speed[1] = max(min(1000, speed[1]-(event.value*100)), 0)
+                    else:
+                        speed[0] = max(min(1000, speed[0]-(event.value*100)), 0)
+                        speed[1] = max(min(1000, speed[1]+(event.value*100)), 0)
+                else:
+                    speed = [0,0]
+                speed = control_motors(speed[0], speed[1])
 pygame.quit()
