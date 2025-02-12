@@ -6,8 +6,8 @@ import time
 def control_motors(l, r):
     #print(f"Left Motors: {left_speed}, Right Motors: {right_speed}") 
     
-    left_speed = int(l)
-    right_speed = -1 * int(r)
+    left_speed = max(min(1000, int(l)), -1000)
+    right_speed = max(min(1000, -1 * int(r)), -1000)
     #left side
     servo_28.motor_mode(left_speed)
     servo_22.motor_mode(left_speed)
@@ -106,15 +106,15 @@ while run:
                 # Axis 0 = y (negative up)
                 # Axis 1 = x (negative left)
                 if event.axis == 0:
-                    speed[0] = max(min(1000, speed[0]+(event.value*100)), -1000)
-                    speed[1] = max(min(1000, speed[1]+(event.value*100)), -1000)
+                    speed[0] = speed[0]+(event.value*100)
+                    speed[1] = speed[1]+(event.value*100)
                 elif event.axis == 1:
                     if event.value > 0:
-                        speed[0] = min(1000, speed[0]+(event.value*100))
-                        speed[1] = max(min(1000, speed[1]-(event.value*100)), -1000)
+                        speed[0] = speed[0]+(event.value*100)
+                        speed[1] = speed[1]-(event.value*100)
                     else:
-                        speed[0] = max(min(1000, speed[0]-(event.value*100)), -1000)
-                        speed[1] = min(1000, speed[1]+(event.value*100))
+                        speed[0] = speed[0]-(event.value*100)
+                        speed[1] = speed[1]+(event.value*100)
             else:
                 speed = [0,0]
             speed = control_motors(speed[0], speed[1])
