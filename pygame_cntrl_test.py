@@ -83,6 +83,7 @@ else:
 # Loop to read inputs
 run = True
 speed = [0,0]
+base_speed = 0
 while run:
 
     for event in pygame.event.get():
@@ -99,8 +100,6 @@ while run:
 
         
         if (event.type == pygame.JOYAXISMOTION):
-            print(f"Axis {event.axis} moved to {event.value}")
-            base_speed = 0
             if abs(event.value) > 0.2:
                 print(f"Axis {event.axis} moved to {event.value}")
                 # Left Joystick
@@ -108,15 +107,16 @@ while run:
                 # Axis 1 = x (negative left)
                 if event.axis == 0:
                     base_speed = base_speed+(event.value*1000)
-                    speed[0], speed[1] = base_speed 
+                    speed[0] = speed[1] = base_speed 
                 elif event.axis == 1:
                     if event.value > 0: #right
-                        speed[0] = base_speed 
+                        speed[0] = base_speed+(event.value*1000)
                         speed[1] = base_speed-(event.value*1000)
                     else: #left
                         speed[0] = base_speed-(event.value*1000)
-                        speed[1] = base_speed 
+                        speed[1] = base_speed+(event.value*1000)
             else:
                 speed = [0,0]
             speed = control_motors(speed[0], speed[1])
+            time.sleep(0.01)
 pygame.quit()
