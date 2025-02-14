@@ -17,7 +17,7 @@ def control_motors(l, r):
     servo_21.motor_mode(right_speed)
     servo_20.motor_mode(right_speed)
     servo_23.motor_mode(right_speed)
-    _speed = [l, r]
+    _speed = [left_speed, right_speed]
     return _speed
 
 
