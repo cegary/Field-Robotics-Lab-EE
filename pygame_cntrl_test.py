@@ -99,30 +99,31 @@ while run:
                 break
 
         
-        if (event.type == pygame.JOYAXISMOTION) and abs(event.value) > 0.2:
-            print(f"Axis {event.axis} moved to {event.value}")
-            # Left Joystick
-            # Axis 0 = y (negative up)
-            # Axis 1 = x (negative left)
-            flag = False
-            if event.axis == 0:
-                if abs(base_speed) < 1000:
-                    base_speed = base_speed+(event.value*1000)
-                    speed[0] = speed[1] = base_speed 
-                    flag = True
-            elif event.axis == 1:
-                if event.value > 0: #right
-                    speed[0] = base_speed+(event.value*1000)
-                    speed[1] = base_speed-(event.value*1000)
-                else: #left
-                    speed[0] = base_speed-(event.value*1000)
-                    speed[1] = base_speed+(event.value*1000)
-                flag = False
+        if (event.type == pygame.JOYAXISMOTION):
+            if abs(event.value) > 0.2:
+                print(f"Axis {event.axis} moved to {event.value}")
+                # Left Joystick
+                # Axis 0 = y (negative up)
+                # Axis 1 = x (negative left)
+                flag = 0
+                if event.axis == 0:
+                    if abs(base_speed) < 1000:
+                        base_speed = base_speed+(event.value*1000)
+                        speed[0] = speed[1] = base_speed 
+                        flag = 1
+                elif event.axis == 1:
+                    if event.value > 0: #right
+                        speed[0] = base_speed+(event.value*1000)
+                        speed[1] = base_speed-(event.value*1000)
+                    else: #left
+                        speed[0] = base_speed-(event.value*1000)
+                        speed[1] = base_speed+(event.value*1000)
+                    flag = 1
+            else:
+                speed = [0,0]
+                flag = 1
             if(flag): 
                 speed = control_motors(speed[0], speed[1])
-                flag = False
-        elif abs(event.value) <= 0.2:
-            speed = [0,0]
-            speed = control_motors(speed[0], speed[1])
-        time.sleep(0.01)
+                flag = 0
+            time.sleep(0.01)
 pygame.quit()
