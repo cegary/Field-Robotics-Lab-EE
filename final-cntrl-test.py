@@ -78,12 +78,9 @@ else:
     #servo_26.set_angle_limits(0, 240)
     servo_26.set_angle_offset(29)
     
-    left_x=0.0
-    left_y=0.0
 
 # Loop to read inputs
 run = True
-speed = [0,0]
 base_speed = 0
 servo_24.move(0)
 
@@ -102,49 +99,25 @@ while run:
     
     left_y = joystick.get_axis(1)
     left_x = joystick.get_axis(0)
-    
-    if left_y < -0.2: #foward
-        base_speed = abs(left_y) * 1000 
-
-        if left_x < -0.2:  # Turn Left
-            left_motor = base_speed * 0.4  # Reduce left speed
-            right_motor = base_speed  # Keep right motor full
-        elif left_x > 0.2:  # Turn Right
-            left_motor = base_speed  # Keep left motor full
-            right_motor = base_speed * 0.4  # Reduce right speed
-        else:  # Move straight
-            left_motor = base_speed
-            right_motor = base_speed
-
-    elif left_y > 0.2: #backward
-        base_speed = abs(left_y) * 1000 
-
-        if left_x < -0.2:  # Turn Left
-            left_motor = (-1*base_speed) * 0.4  # Reduce left speed
-            right_motor = (-1*base_speed)  # Keep right motor full
-        elif left_x > 0.2:  # Turn Right
-            left_motor = (-1*base_speed)  # Keep left motor full
-            right_motor = (-1*base_speed) * 0.4  # Reduce right speed
-        else:  # Move straight
-            left_motor = (-1*base_speed)
-            right_motor = (-1*base_speed)
-
-    elif left_x > 0.2: #turn right
-        base_speed = abs(left_x) * 1000 
-        left_motor = (base_speed) 
-        right_motor = 0
-
-    elif left_x < -0.2: #turn left
-        base_speed = abs(left_x) * 1000 
-        right_motor = (base_speed) 
-        left_motor = 0
+    if abs(left_y) > 0.2 or abs(left_x) > 0.2:
+        if not (abs(left_y) <= 0.2 and base_speed != 0):
+            if left_y < -0.2: #forward
+                base_speed = abs(left_y) * 1000
+            elif left_y > 0.2: #backward
+                base_speed = abs(left_y) * 1000   
+        if left_x > 0.2: #turn right
+            #base_speed = abs(left_x) * 1000
+            left_motor = (base_speed) 
+            right_motor = -1 * (base_speed) #abs(left_x) * -1000 
+        elif left_x < -0.2: #turn left
+            #base_speed = abs(left_x) * 1000 
+            right_motor = (base_speed) 
+            left_motor = -1 * (base_speed) #abs(left_x) * -1000 
 
     else:
-        base_speed = 0
-        left_motor = base_speed
-        right_motor = base_speed
+        base_speed = left_motor = right_motor = 0
 
     print(f"basespeed {base_speed}")
-    speed = control_motors(left_motor, right_motor)
+    control_motors(left_motor, right_motor)
     
 pygame.quit()
