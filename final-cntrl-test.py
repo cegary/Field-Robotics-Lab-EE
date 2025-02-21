@@ -6,8 +6,10 @@ import time
 def control_motors(l, r):
     #print(f"Left Motors: {left_speed}, Right Motors: {right_speed}") 
     
+    #matching directions
     left_speed = max(min(1000, int(l)), -1000)
     right_speed = max(min(1000, -1 * int(r)), -1000)
+
     #left side
     servo_28.motor_mode(left_speed)
     servo_22.motor_mode(left_speed)
@@ -21,7 +23,8 @@ def control_motors(l, r):
     return _speed
 
 
-LX16A.initialize("COM12")
+LX16A.initialize("COM12") # REPLACE PORT AS NEEDED
+
 # Initialize pygame
 pygame.init()
 pygame.joystick.init()
@@ -93,27 +96,20 @@ while run:
             print(f"Button {event.button} pressed")
             if event.button == 1:
                 control_motors(0,0)
-                run = False
-                break
+                print("Paused.")
+                while event.button.get_button == False:
+                    pass
 
-    
     left_y = joystick.get_axis(1)
     left_x = joystick.get_axis(0)
     if abs(left_y) > 0.2 or abs(left_x) > 0.2:
-        if not (abs(left_y) <= 0.2 and base_speed != 0):
-            if left_y < -0.2: #forward
-                base_speed = abs(left_y) * 1000
-            elif left_y > 0.2: #backward
-                base_speed = abs(left_y) * 1000   
+        if not (abs(left_y) < 0.2 and base_speed != 0):
+            base_speed = abs(left_y) * 1000
+            left_motor = right_motor = base_speed
         if left_x > 0.2: #turn right
-            #base_speed = abs(left_x) * 1000
-            left_motor = (base_speed) 
-            right_motor = -1 * (base_speed) #abs(left_x) * -1000 
+            right_motor = -1 * (base_speed)
         elif left_x < -0.2: #turn left
-            #base_speed = abs(left_x) * 1000 
-            right_motor = (base_speed) 
-            left_motor = -1 * (base_speed) #abs(left_x) * -1000 
-
+            left_motor = -1 * (base_speed)
     else:
         base_speed = left_motor = right_motor = 0
 
