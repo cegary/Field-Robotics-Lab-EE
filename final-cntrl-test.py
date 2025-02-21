@@ -67,6 +67,7 @@ else:
     servo_24.servo_mode()
     #servo_24.set_angle_limits(0, 240)
     servo_24.set_angle_offset(-30)
+    servo_24.move(0)
 
     servo_25.servo_mode()
     #servo_25.set_angle_limits(0, 240)
@@ -85,7 +86,7 @@ else:
 # Loop to read inputs
 run = True
 base_speed = 0
-servo_24.move(0)
+paused = False
 
 while run:
     # Check for button press
@@ -95,25 +96,31 @@ while run:
         if event.type == pygame.JOYBUTTONDOWN:
             print(f"Button {event.button} pressed")
             if event.button == 1:
-                control_motors(0,0)
-                print("Paused.")
-                while event.button.get_button == False:
-                    pass
+                if paused:
+                    print("Unpaused.")
+                    paused = False
+                else:
+                    control_motors(0,0)
+                    print("Paused.")
+                    paused = True
+    if not paused:
+        left_y = joystick.get_axis(1)
+        left_x = joystick.get_axis(0)
+        if abs(left_y) >= 0.2 or abs(left_x) >= 0.2:
+            if abs(left_y) >= 0.2:
+                base_speed = abs(left_y) * 1000
+                left_motor = right_motor = base_speed
+            if left_x >= 0.2: #turn right
+                left_motor = base_speed
+                right_motor = -1 * (base_speed)
+            elif left_x <= -0.2: #turn left
+                left_motor = -1 * (base_speed)
+                right_motor = base_speed
+        else:
+            base_speed = left_motor = right_motor = 0
 
-    left_y = joystick.get_axis(1)
-    left_x = joystick.get_axis(0)
-    if abs(left_y) > 0.2 or abs(left_x) > 0.2:
-        if not (abs(left_y) < 0.2 and base_speed != 0):
-            base_speed = abs(left_y) * 1000
-            left_motor = right_motor = base_speed
-        if left_x > 0.2: #turn right
-            right_motor = -1 * (base_speed)
-        elif left_x < -0.2: #turn left
-            left_motor = -1 * (base_speed)
-    else:
-        base_speed = left_motor = right_motor = 0
+        print(f"basespeed {base_speed}")
+        control_motors(left_motor, right_motor)
 
-    print(f"basespeed {base_speed}")
-    control_motors(left_motor, right_motor)
     
 pygame.quit()
