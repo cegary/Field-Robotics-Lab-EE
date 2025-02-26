@@ -21,7 +21,8 @@ def control_motors(l, r):
     return _speed
 
 def set_speed(s):
-    s = max(min(1000, int(s)), -1000)
+    s = max(min(1000, s), -1000)
+    
     #left side
     servo_28.motor_mode(s)
     servo_22.motor_mode(s)
@@ -148,11 +149,8 @@ while run:
         if abs(left_x) > 0.2:
             theta = turn(left_x * 40)
         if abs(left_y) > 0.2:
-            base_speed = max(min(1000, (int(left_y) * 1000)), -1000)
-            set_speed(base_speed)
-        else:
-            if base_speed != 0:
-                set_speed(0)
-                base_speed = 0
+            base_speed = int(left_y * 1000)
+        else: base_speed = 0
+        set_speed(base_speed)
                     
 pygame.quit()
